@@ -176,9 +176,6 @@ function onShowLink(id,title,content)
 }
 
 function onShowTasksLink(_id, title, content){
-    console.log("this is a title=" + title);
-    console.log("this is a id=" + _id);
-    console.log("this is a content=" + content);
     $("#One_Task_show").empty();
     $.mobile.changePage("#ShowTasksPage");
     
