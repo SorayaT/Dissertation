@@ -275,15 +275,19 @@
         </section>
     </div>
 
-<!-- Detail Page -->
+<!-- Task Detail Page -->
     <div data-role="page" id="ShowTasksPage">
         <header data-role="header" data-position="fixed" data-theme="c">
             <a data-role="button" data-theme="b" data-rel="back" data-icon="back">Back</a>
             <a href="#EditTaskPage" data-theme="b" class="ui-btn-right" id="EditTaskBtn">Edit</a>
-            <h1 id="title_show"></h1>
+            <!-- <h1 id="title_Task_show"></h1> -->
         </header>
         <section data-role="content">
-            <p id="One_Task_show"></p>
+            <!-- <p id="One_Task_show"></p> -->
+            <h1 id="title_Task_show"></h1>
+            <p id="content_Task_show"></p>
+            <p id="id_Task_show"></p>
+
         </section>
         
         
@@ -316,7 +320,7 @@
     <div data-role="page" id="EditTaskPage" data-cache="never">
         <header data-role="header" data-position="fixed" data-theme="c">
             <a data-role="button" data-theme="b" data-rel="back" data-icon="back">Back</a>
-            <h1>Edit Memo</h1>
+            <h1>Edit Tasks</h1>
         </header>
         
         <section data-role="content">
@@ -324,6 +328,7 @@
             <input type="text" id="title_Task_edit">
             <label for="Task">Task:</label>
             <textarea id="content_Task_edit" style="height: 8em"></textarea>
+            <input type="text" id="id_Task_edit">
             <a href="#" data-theme="b" data-role="button" data-icon="check" id="UpdateTaskBtn">Update</a>
 
             <!--Dialog box of successful updating-->

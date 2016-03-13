@@ -4,9 +4,9 @@ $(function() {
   $("#RegisterBtn").click(onRegisterBtn);
   $("#SaveBtn").click(onSaveBtn);
   $("#EditBtn").click(onEditBtn);
-  //$("#EditTaskBtn").click(onEditTaskBtn);
+  $("#EditTaskBtn").click(onEditTaskBtn);
   $("#UpdateBtn").click(onUpdateBtn);
-  //$("#UpdateTaskBtn").click(UpdateTaskBtn)
+  $("#UpdateTaskBtn").click(UpdateTaskBtn)
   $("#YesBtn_logout").click(onLogoutBtn);
   $("#YesBtn_Taskdelete").click(deleteTask);
   $("#YesBtn_delete").click(deleteMemo);
@@ -20,6 +20,7 @@ $(function() {
 
 
 var currentMemoID;
+var currentTaskID
 var MC = monaca.cloud;
 
 function onRegisterBtn()
@@ -183,7 +184,13 @@ function onShowTasksLink(_id, title, content){
 }
 
 function showtask(_id, title, content){
-    $("#One_Task_show").append(title + content);
+    //$("#One_Task_show").append(title + content);
+    console.log(title);
+    console.log(content);
+    $("#title_Task_show").text(title);
+    $("#content_Task_show").text(content);
+    $("#id_Task_show").text(_id);
+
 }
 
 function GetTasks(id){
@@ -208,7 +215,6 @@ function GetTasks(id){
                    
                    //GetTasks(id).each(function( result ) {
                    for(i = 0; i < result.totalItems; i++) { 
-                       console.log("task title:"+result.items[i].title);
                        var edit= "<a href=''>Edit</a>";
                        var show= "<a href='javascript:onShowLink(\'' + result.items[i].id + '\',\'' + result.items[i].title + '\',\'' + memo.content + '\')' class='show'><h3></h3><p></p></a>";
                 //$li = $("<li><a href='javascript:onShowLink(\"" + memo._id + memo.title + memo.content + "\")' class='show'><h3></h3><p></p></a><a href='javascript:onDeleteBtn(\"" + memo._id + "\")' class='delete'>Delete</a></li>");
@@ -314,48 +320,56 @@ function onEditBtn()
   $.mobile.changePage("#EditPage");
 }
 
-// function onEditTaskBtn(){
-//     var title = $("#title_show").text();
-//   var content = $("#content_show").text();
-//   $("#title_Task_edit").val(title);
-//   $("#content_Task_edit").text(content);
-//   $.mobile.changePage("#EditPage");
-// }
-// function UpdateTaskBtn(){
-//     var new_title = $("#title_Task_edit").val();
-//   var new_content = $("#content_Task_edit").val();
-//   var id = currentMemoID;
-//   if (new_title != '') {
-//     editTaskMemo(id, new_title, new_content);
-//   }
-// }
+function onEditTaskBtn(){
+     var title = $("#title_Task_show").text();
+   var content = $("#content_Task_show").text();
+     var id= $("#id_Task_show").text();
+  console.log("the id is="+ id);
+  //console.log("the content is="+ content);
+  $("#title_Task_edit").val(title);
+  $("#content_Task_edit").text(content);
+    $("#id_Task_edit").val(id);
 
-// function editTaskMemo(id, new_title, new_content){
-//   var memo = MC.Collection("Tasks");
-//   memo.findMine(MC.Criteria("_id==?", [id]))
-//     .done(function(items, totalItems)
-//     {
-//       items.items[0].title = new_title;
-//       items.items[0].content = new_content;
-//       items.items[0].update()
-//         .done(function(updatedItem)
-//         {
-//               console.log("last id= "+id);
-// 
-//           console.log('Updating is success!');
-//           //display a dialog stating that the updating is success
-//           // $( "#okDialogTask_edit" ).popup("open", {positionTo: "origin"}).click(function(event)
-//           // {
-//           //   //getMemoList();
-//           //   $.mobile.changePage("#ShowTasksPage");
-//           // });
-//         })
-//         .fail(function(err){ console.error(JSON.stringify(err)); });
-//     })
-//     .fail(function(err){
-//       console.error(JSON.stringify(err));
-//     });
-// }
+  $.mobile.changePage("#EditTaskPage");
+}
+function UpdateTaskBtn(id){
+    var new_title = $("#title_Task_edit").val();
+  var new_content = $("#content_Task_edit").val();
+    var id = $("#id_Task_edit").val();
+
+console.log(id);
+  if (new_title != '') {
+    editTaskMemo(id, new_title, new_content);
+  }
+}
+
+function editTaskMemo(id, new_title, new_content){
+  var memo = MC.Collection("Tasks");
+  memo.findMine(MC.Criteria("_id==?", [id]))
+    .done(function(items, totalItems)
+    {
+    console.log("edittaskmemo title =" + items.items[0].title);
+    //console.log("edittaskmemo content ="+ items.items[0].content);
+      items.items[0].title = new_title;
+      items.items[0].content = new_content;
+      items.items[0].update()
+        .done(function(updatedItem)
+        {
+            $.mobile.changePage("#ListPage");
+          console.log('Updating is success!');
+          //display a dialog stating that the updating is success
+          $( "#okDialogTask_edit" ).popup("open", {positionTo: "origin"}).click(function(event)
+          {
+          //   //getMemoList();
+            $.mobile.changePage("#ListPage");
+          });
+        })
+        .fail(function(err){ console.error(JSON.stringify(err)); });
+    })
+    .fail(function(err){
+      console.error(JSON.stringify(err));
+    });
+}
 
 function onUpdateBtn()
 {
