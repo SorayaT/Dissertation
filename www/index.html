@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/app.js"></script>
   <script src="js/cssua.min.js"></script>
+
 </head>
 <body>
 
@@ -25,6 +26,7 @@
                 <li><a href="#RegisterPage">Register</a></li>
                 <li><a href="#LoginPage">Login</a></li>
                 <li><a href="#About">About</a></li>
+                <li><a id="calendarbutton" href="#Calendar">TimeTablePage</a></li>
             </ul>
         </section>
     </div>
@@ -77,7 +79,24 @@
             </div>
         </section>
     </div>
-  
+     <!-- Calendar Page -->
+    <div data-role="page" id="Calendar">
+        <header data-role="header" data-position="fixed" data-theme="c">
+            <h1>Profile</h1>
+            <a href="#LandingPage" data-theme="b" class="ui-btn-right">Home</a>
+            <a href="#yesNoDialog_logout" class="ui-btn-left" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-theme="b">Logout</a>
+        </header>
+        
+        <section data-role="content">
+            <div id="calendar">
+                <div id="year">
+                    <div id="month">
+                        <div id="day"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 <!-- Login Page -->
     <div data-role="page" id="LoginPage">
         <header data-role="header" data-position="fixed" data-theme="c">
@@ -114,6 +133,23 @@
         </section>
     </div>
     
+    <!-- TimeTable Page -->
+    <div data-role="page" class="timetable" id="TimeTablePage">
+        <header data-role="header" data-position="fixed" data-theme="c">
+            <h1>Home Page</h1>
+            <a href="#RegisterPage" data-theme="b" class="ui-btn-right">Register</a>
+            <a href="#LandingPage" data-theme="b" class="ui-btn-left">Home</a>
+        </header>
+        
+        <!-- <section data-role="content"> -->
+        <!-- <div style="position:absolute;top:25%; right:20%">
+            <br><input type="text" placeholder="Email" id="login_email"><br>
+            <input type="password" placeholder="Password" id="login_password">
+            <br><a href="#" id="LoginBtn" data-role="button" data-inline="false" data-theme="b">Login</a>
+        </div> -->
+       <!-- </section> -->
+    </div>
+    
     <!-- UpdateProfile Page -->
     <div data-role="page" id="UpdateProfile">
         <header data-role="header" data-position="fixed" data-theme="c">
@@ -132,6 +168,8 @@
             </div>
         </section>
     </div>
+    
+    
 
 <!-- List Page -->
     <div data-role="page" id="ListPage">
@@ -234,6 +272,7 @@
             <input placeholder="Title" type="text" id="Tasktitle">
             <textarea placeholder="Projects" id="Taskcontent" style="height: 8em"></textarea>
             <input type="text" id="assignmentid">
+            <input type="date" id="taskbegin">
 
             <a href="#" data-rel="dialog" data-transition="pop" data-theme="b" data-role="button" data-icon="check" id="AddTasksBtn">Add Assignment</a>
             <div id="test"></div>

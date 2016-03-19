@@ -14,6 +14,8 @@ $(function() {
   $("#AddProjBtn").click(AddProject);
   $("#AddTasksBtn").click(addTasks);
   $("#Assignments").click(getMemoList);
+    $("#calendarbutton").click(CreateCalendar);
+
 
 });
 
@@ -152,8 +154,10 @@ function addTasks(asignId){
     var title= $("#Tasktitle").val();
     var content= $("#Taskcontent").val();
     var assignmentId= $("#assignmentid").val();
+    var taskbegin= $("#taskbegin").val();
 
-  Projects.insert({title: title, content:content, AssignmentId:assignmentId})
+
+  Projects.insert({title: title, content:content, AssignmentId:assignmentId, taskbegin:taskbegin})
   .done(function(insertedItem)
   {
     alert('Insert is success!');
@@ -233,6 +237,37 @@ function GetTasks(id){
             });
 
         }
+        
+function CreateCalendar(){
+    var cal = monaca.cloud.Collection("Calendar");
+    cal.find('',"",{propertyNames: ["Month", "Day"]})
+    .done(function(result)
+    {
+       console.log('Total items found: ' + result.totalItems);
+       console.log('The body of the first item: ' + result.items[0].Month);
+       
+       for(i = 0; i<12; i++){
+           
+          
+           var month= result.items[i].Month;
+           var days= result.items[i].Day;
+           $("#month").append("<div>"+month);
+           
+          for(d=1;d<days;d++){
+              //d++;
+              $("#month").append("<div>"+d+"</div>");
+          }
+          $("#month").append("</div>");
+           console.log("hello");
+           //                     $("#day").append(i);
+           
+       }
+    })
+    .fail(function(err)
+    {
+       console.log("Err#" + err.code +": " + err.message);
+    });
+}
 
 function onDeleteBtn(id)
 {
