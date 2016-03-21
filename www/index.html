@@ -26,7 +26,7 @@
                 <li><a href="#RegisterPage">Register</a></li>
                 <li><a href="#LoginPage">Login</a></li>
                 <li><a href="#About">About</a></li>
-                <li><a id="calendarbutton" href="#Calendar">TimeTablePage</a></li>
+                <!--<li><a id="calendarbutton" href="#Calendar">TimeTablePage</a></li>-->
             </ul>
         </section>
     </div>
@@ -74,7 +74,8 @@
                 <ul data-role="listview" id="menu" data-ajax="false" data-inset="true" >
                     <li><a id="Assignments" href="#ListPage">Assignments</a></li>
                     <li><a href="#UpdateProfile">Profile</a></li>
-                    <li><a href="#Calendar">Calendar</a></li>
+                    <li><a id="calendarbutton" href="#Calendar">TimeTablePage</a></li>
+
                 </ul>
             </div>
         </section>
@@ -251,6 +252,10 @@
             <input type="text" id="title">
             <label for="Projects">Projects:</label>
             <textarea id="content" style="height: 8em"></textarea>
+            <label for="StartDate">Start Date:</label>
+            <input type="date" id="startdate"/>
+            <label for="EndDate">End Date:</label>
+            <input type="date" id="enddate"/>
             <a href="#" data-rel="dialog" data-transition="pop" data-theme="b" data-role="button" data-icon="check" id="AddProjBtn">Add Assignment</a>
 
             <!--Dialog box of successful adding -->
@@ -299,7 +304,10 @@
         <section data-role="content">
                 <a href="#AddTasksPage">Add Task</a>
 
-            <p id="content_show"></p>
+            <p id="content_show">
+                <p id="startdateshow"></p>
+                <p id="enddateshow"></p>
+            </p>
             
             <!--Dialog box confirming delete -->
             <div data-role="popup" id="Task_delete" data-overlay-theme="a" data-theme="c" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">

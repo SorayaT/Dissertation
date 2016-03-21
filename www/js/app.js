@@ -83,6 +83,7 @@ function onSaveBtn()
 {
   var title = $("#title").val();
   var content = $("#content").val();
+  
   if (title != '')
   {
     addMemo(title,content);
@@ -120,16 +121,18 @@ function AddProject()
 {
   var title = $("#title").val();
   var content = $("#content").val();
+  var startdate= $("#startdate").val();
+  var enddate= $("#enddate").val();
   if (title != '')
   {
-    addProjectfinal(title,content);
+    addProjectfinal(title,content,startdate,enddate);
   }
 }
 
-function addProjectfinal(title,content) {
+function addProjectfinal(title,content,startdate,enddate) {
   var Projects = MC.Collection("Projects");
 
-  Projects.insert({ title: title, content: content})
+  Projects.insert({ title: title, content: content, startdate:startdate,enddate:enddate})
   .done(function(insertedItem)
   {
     alert('Insert is success!');
@@ -169,15 +172,15 @@ function addTasks(asignId){
   })
 }
 
-function onShowLink(id,title,content)
+function onShowLink(id,title,content,startdate,enddate)
 {
   currentMemoID = id;
   $("#title_show").text(title);
+  $("#startdateshow").text(startdate);
+  $("#enddateshow").text(enddate);
   //$("#content_show").text(content);
   $.mobile.changePage("#ShowPage");
-  GetTasks(id);
-  
-  
+    GetTasks(id);
 }
 
 function onShowTasksLink(_id, title, content){
@@ -243,94 +246,101 @@ function CreateCalendar(){
     cal.find('',"",{propertyNames: ["Month", "Day"]})
     .done(function(result)
     {
-       console.log('Total items found: ' + result.totalItems);
-       console.log('The body of the first item: ' + result.items[0].Month);
-                  var date= new Date();
-                  var year= date.getFullYear();
+        console.log('Total items found: ' + result.totalItems);
+        console.log('The body of the first item: ' + result.items[0].Month);
+        
+        var date= new Date();
+        var year= date.getFullYear();
+        
+        
+        
 
        for(y=0; y<2; y++){
-           //for(v=12; v<19;v++){
-           //  var mm= new Date("3/04/2016");
-           //  for(v = new Date("02/03/2016"); v <= mm; v.getDate()+1){
-           //                    $("#day1-3-20016").append("<p>"+v+"</p>");
-           // }
            
-//            var start = new Date(" March 2, 2016");
-//     var end = new Date("April 5, 2016");
-// 
-//     while(start < end){
-//         var newDate = start.setDate(start.getDate() + 1);
-//        start1 = new Date(newDate);
-//        var newdate1= start1.getMonth()+"-"+start1.getDay()+"-"+start1.getFullYear();
-//        $("#day"+newdate1).append("<p>ii</p>");
-// 
-//               console.log(newdate1);
-//               
-//     }
-
-var start = new Date("02/05/2016");
-    var end = new Date("03/10/2016");
-
-    while(start < end){
-
-       var newDate = start.setDate(start.getDate() + 1);
-       start = new Date(newDate);
-       //start.format("YYYY-MM-DD");
-        // var day= start.getDay();
-        // var month= start.getMonth();
-        // var year= start.getFullYear();
-        //var sdsa= $.format.date(new Date(), 'dd M yy'));
-        //dateid= month+"."+day+"."+year;
-            //var d = new Date(dateObject);
-            var day = start.getDate();
-            var month = start.getMonth();
-            var year = start.getFullYear();
-        if (day < 10) {
-            day = day;
-        }
-        if (month < 10) {
-            month = month;
-        }
-        var date = month + "-" + day + "-" + year;
-    
-        console.log(date);
-        //console.log(day);
-        $("#day"+date).append("<p>ii</p>");
-
-        // console.log(day);
-
-
-    }
-    
-
+            addtoCalendar();
+                
             $("#calendar").append("<div id='yr'>"+year);
-            //year++;
-           for(i = 0; i<12; i++){
+            
+            for(i = 0; i<12; i++){
                var month= result.items[i].Month;
                var days= result.items[i].Day;
                $("#calendar").append("<div id='month'>"+month);
                
-              for(d=1;d<days;d++){
-                  //d++;
-                  $("#calendar").append("<div id='day"+i+"-"+d+"-"+year+"'>"+d+"</div>");
-                  
-                  //for(v=210; v<330;v++){
-                  //var datepick="150";
-                  //$("#day"+v).css({"background-color":"blue"});
-                  //}
-              }
-              $("#calendar").append("</div></div>");
-               console.log("hello");
-               //                     $("#day").append(i);
-               
-           }
-       }
+               for(d=1;d<days;d++){
+                   $("#calendar").append("<div id='day"+i+"-"+d+"-"+year+"'>"+d+"</div>");
+                }
+                
+                $("#calendar").append("</div></div>");
+                    console.log("hello");
+                    
+            }
+        }
     })
     .fail(function(err)
     {
        console.log("Err#" + err.code +": " + err.message);
     });
 }
+
+        
+         function addtoCalendar(){
+     // var start = new Date("02/05/2016");
+     // var end = new Date("03/10/2016");
+     var MC = monaca.cloud;
+  var memo = MC.Collection("Projects");
+ 
+  memo.findMine()
+    .done(function(items, totalItems)
+    {
+        //console.log("all: " + JSON.stringify(items));
+      //$("#ListPage #TopListView").empty();
+      var list = items.items;
+
+      for (var i in list)
+      {
+        var memo = list[i];
+        var asignId = memo._id;
+        var d = new Date(memo._createdAt);
+        var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
+        
+        // $li = $("<li><a href='javascript:onShowLink(\"" + memo._id + "\",\"" + memo.title + "\",\"" + memo.content + "\",\"" + memo.startdate + "\",\"" + memo.enddate + "\")' class='show'><h3></h3><p></p></a><a href='javascript:onDeleteBtn(\"" + memo._id + "\")' class='delete'>Delete</a></li>");
+        // $li.find("h3").text(date);
+        // $li.find("p").text(memo.title);
+
+        // $("#TopListView").prepend($li);
+        var start= new Date(memo.startdate);
+        console.log("start is: "+start);
+        var end= new Date(memo.enddate);
+        console.log(end);
+        var projtitle= memo.title;
+        
+        while(start < end){
+                 var newDate = start.setDate(start.getDate() + 1);
+                 start = new Date(newDate);
+                 
+                 var day = start.getDate();
+                 var month = start.getMonth();
+                 var year = start.getFullYear();
+             
+                 if (day < 10) {
+                 day = day;
+                 }
+                 if (month < 10) {
+                     month = month;
+                 }
+                 
+                 var date = month + "-" + day + "-" + year;
+     
+                 console.log(date);
+                 $("#day"+date).append("<p>"+projtitle+"</p>");
+             }
+//          
+      }});
+     // var start = startdate;
+     // var end = enddate;
+         
+             
+ }
 
 function onDeleteBtn(id)
 {
@@ -523,11 +533,12 @@ function getMemoList() {
         var d = new Date(memo._createdAt);
         var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
         
-        $li = $("<li><a href='javascript:onShowLink(\"" + memo._id + "\",\"" + memo.title + "\",\"" + memo.content + "\")' class='show'><h3></h3><p></p></a><a href='javascript:onDeleteBtn(\"" + memo._id + "\")' class='delete'>Delete</a></li>");
+        $li = $("<li><a href='javascript:onShowLink(\"" + memo._id + "\",\"" + memo.title + "\",\"" + memo.content + "\",\"" + memo.startdate + "\",\"" + memo.enddate + "\")' class='show'><h3></h3><p></p></a><a href='javascript:onDeleteBtn(\"" + memo._id + "\")' class='delete'>Delete</a></li>");
         $li.find("h3").text(date);
         $li.find("p").text(memo.title);
 
         $("#TopListView").prepend($li);
+         
       }
       if (list.length == 0) {
         $li = $("<li>No memo found</li>");
