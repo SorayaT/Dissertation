@@ -245,22 +245,85 @@ function CreateCalendar(){
     {
        console.log('Total items found: ' + result.totalItems);
        console.log('The body of the first item: ' + result.items[0].Month);
-       
-       for(i = 0; i<12; i++){
+                  var date= new Date();
+                  var year= date.getFullYear();
+
+       for(y=0; y<2; y++){
+           //for(v=12; v<19;v++){
+           //  var mm= new Date("3/04/2016");
+           //  for(v = new Date("02/03/2016"); v <= mm; v.getDate()+1){
+           //                    $("#day1-3-20016").append("<p>"+v+"</p>");
+           // }
            
-          
-           var month= result.items[i].Month;
-           var days= result.items[i].Day;
-           $("#month").append("<div>"+month);
-           
-          for(d=1;d<days;d++){
-              //d++;
-              $("#month").append("<div>"+d+"</div>");
-          }
-          $("#month").append("</div>");
-           console.log("hello");
-           //                     $("#day").append(i);
-           
+//            var start = new Date(" March 2, 2016");
+//     var end = new Date("April 5, 2016");
+// 
+//     while(start < end){
+//         var newDate = start.setDate(start.getDate() + 1);
+//        start1 = new Date(newDate);
+//        var newdate1= start1.getMonth()+"-"+start1.getDay()+"-"+start1.getFullYear();
+//        $("#day"+newdate1).append("<p>ii</p>");
+// 
+//               console.log(newdate1);
+//               
+//     }
+
+var start = new Date("02/05/2016");
+    var end = new Date("03/10/2016");
+
+    while(start < end){
+
+       var newDate = start.setDate(start.getDate() + 1);
+       start = new Date(newDate);
+       //start.format("YYYY-MM-DD");
+        // var day= start.getDay();
+        // var month= start.getMonth();
+        // var year= start.getFullYear();
+        //var sdsa= $.format.date(new Date(), 'dd M yy'));
+        //dateid= month+"."+day+"."+year;
+            //var d = new Date(dateObject);
+            var day = start.getDate();
+            var month = start.getMonth();
+            var year = start.getFullYear();
+        if (day < 10) {
+            day = day;
+        }
+        if (month < 10) {
+            month = month;
+        }
+        var date = month + "-" + day + "-" + year;
+    
+        console.log(date);
+        //console.log(day);
+        $("#day"+date).append("<p>ii</p>");
+
+        // console.log(day);
+
+
+    }
+    
+
+            $("#calendar").append("<div id='yr'>"+year);
+            //year++;
+           for(i = 0; i<12; i++){
+               var month= result.items[i].Month;
+               var days= result.items[i].Day;
+               $("#calendar").append("<div id='month'>"+month);
+               
+              for(d=1;d<days;d++){
+                  //d++;
+                  $("#calendar").append("<div id='day"+i+"-"+d+"-"+year+"'>"+d+"</div>");
+                  
+                  //for(v=210; v<330;v++){
+                  //var datepick="150";
+                  //$("#day"+v).css({"background-color":"blue"});
+                  //}
+              }
+              $("#calendar").append("</div></div>");
+               console.log("hello");
+               //                     $("#day").append(i);
+               
+           }
        }
     })
     .fail(function(err)

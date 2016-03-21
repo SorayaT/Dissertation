@@ -19,6 +19,10 @@
 #reg_p{
     text-align: center;
 }
+
+#day1-21-2016{
+    background-color: red;
+}
 #menu li a{
     height: 60px;
 }
