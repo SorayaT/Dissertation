@@ -49,12 +49,16 @@ function onLoginBtn()
 {
   var email = $("#login_email").val();
   var password = $("#login_password").val();
+  
   var MC = monaca.cloud;
   MC.User.login(email, password)
     .done(function()
     {
+          console.log('email: '  + email);
+      console.log('password: '  + password);    
+
       console.log('login: '  + MC.User._oid);
-      getUserList();
+      getUserList(email,password);
       $.mobile.changePage('#LandingPage');
     })
     .fail(function(err)
@@ -123,20 +127,22 @@ function AddProject()
   var content = $("#content").val();
   var startdate= $("#startdate").val();
   var enddate= $("#enddate").val();
+  var projcolour= $("#projectcolour").val();
+
   if (title != '')
   {
-    addProjectfinal(title,content,startdate,enddate);
+    addProjectfinal(title,content,startdate,enddate,projcolour);
   }
 }
 
-function addProjectfinal(title,content,startdate,enddate) {
+function addProjectfinal(title,content,startdate,enddate,projcolour) {
   var Projects = MC.Collection("Projects");
 
-  Projects.insert({ title: title, content: content, startdate:startdate,enddate:enddate})
+  Projects.insert({ title: title, content: content, startdate:startdate,enddate:enddate,projcolour:projcolour})
   .done(function(insertedItem)
   {
-    alert('Insert is success!');
-    console.log('Assignment successfuly saved!');
+    alert('Assignment "'+title+'" successfuly added!');
+    console.log('Assignment " '+title+' " successfuly added!');
       $.mobile.changePage('#LandingPage');
     
     $("#title").val("");
@@ -159,7 +165,7 @@ function addTasks(asignId){
     var assignmentId= $("#assignmentid").val();
     var taskbegin= $("#taskbegin").val();
 
-
+    if(title != 0){
   Projects.insert({title: title, content:content, AssignmentId:assignmentId, taskbegin:taskbegin})
   .done(function(insertedItem)
   {
@@ -170,11 +176,18 @@ function addTasks(asignId){
     $("#title").val("");
     $("#content").val("");
   })
+    }else{
+        alert("Your project needs a name!");
+    }
 }
 
 function onShowLink(id,title,content,startdate,enddate)
 {
   currentMemoID = id;
+  $("#content_Task_edit").val(content);
+  $("#title_Task_edit").val(title);
+  $("#edit_taskbegin").val(startdate);
+  $("#edit_taskend").val(enddate);
   $("#title_show").text(title);
   $("#startdateshow").text(startdate);
   $("#enddateshow").text(enddate);
@@ -220,6 +233,8 @@ function GetTasks(id){
                    $("#content_show").empty();
                    $.removeData(id);
                    
+                   //$("#content_show").append("<ul data-role='listview'>");
+                   
                    //GetTasks(id).each(function( result ) {
                    for(i = 0; i < result.totalItems; i++) { 
                        var edit= "<a href=''>Edit</a>";
@@ -230,6 +245,8 @@ function GetTasks(id){
 
 
                     }
+                    
+                   // $("#content_show").append("</ul>")
                
                 }   
                 //});
@@ -242,6 +259,7 @@ function GetTasks(id){
         }
         
 function CreateCalendar(){
+                        $("#calendar").empty();
     var cal = monaca.cloud.Collection("Calendar");
     cal.find('',"",{propertyNames: ["Month", "Day"]})
     .done(function(result)
@@ -252,12 +270,10 @@ function CreateCalendar(){
         var date= new Date();
         var year= date.getFullYear();
         
-        
-        
+                    addtoCalendar();
 
        for(y=0; y<2; y++){
            
-            addtoCalendar();
                 
             $("#calendar").append("<div id='yr'>"+year);
             
@@ -315,6 +331,7 @@ function CreateCalendar(){
         var projtitle= memo.title;
         
         while(start < end){
+            
                  var newDate = start.setDate(start.getDate() + 1);
                  start = new Date(newDate);
                  
@@ -382,15 +399,6 @@ function deleteTask()
     var Diary = monaca.cloud.Collection("Tasks");
     console.log(currentTaskID);
 
-    // Diary.findOne('_id == "'+currentTaskID+'"')
-    // .done(function(item)
-    // {
-    //    item.remove()
-    //    .done(function()
-    //    {
-    //       console.log("Yes indeed I like him");
-    //    });
-    // });
 }
 
 function deleteMemo()
@@ -404,6 +412,8 @@ function deleteMemo()
       item.delete()
       .done(function()
        {
+           var projectid= item._id;
+           deleteRelatedTasks(projectid);
           console.log("The memo is deleted!");
           getMemoList();
           $.mobile.changePage("#ListPage");
@@ -418,7 +428,40 @@ function deleteMemo()
       alert('Insert failed!');
     });
 }
+function deleteRelatedTasks(projectid){
+    
+    var Tasks = monaca.cloud.Collection("Tasks");
+            var Criteria = monaca.cloud.Criteria('AssignmentId == "'+projectid+'"');
+            //var id= 0;
+            console.log("projectid="+projectid);
 
+            Tasks.find(Criteria, "", {propertyNames: ["_id", "content"]})
+            .done(function(result)
+            {
+                console.log("totalitems="+result.totalItems);
+           // console.log("resultid="+result.items._id);
+            
+                for(i = 0; i < result.totalItems; i++) {
+                    console.log("resultid="+result.items[i]._id);
+                    result.items[i].remove()
+                    .done(function(){
+                           console.log("the tasks were deleted too!"); 
+                        });
+                    
+                    // monaca.cloud.Collection(Tasks).findOne(MC.Criteria('_id == "'+result.items[i]._id+'"'))
+                    // .done(function(items){
+                    //     console.log("item title is="+items.title);
+                    //     items.remove()
+                    //     .done(function(){
+                    //        console.log("the tasks were deleted too!"); 
+                    //     });
+                    // });
+                    
+                }
+            });
+
+    
+}
 function onEditBtn()
 {
   var title = $("#title_show").text();
@@ -488,7 +531,7 @@ function onUpdateBtn()
     editMemo(id, new_title, new_content);
   }
 }
-
+    
 function editMemo(id, new_title, new_content){
   var memo = MC.Collection("Projects");
   memo.findMine(MC.Criteria("_id==?", [id]))
@@ -534,8 +577,8 @@ function getMemoList() {
         var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate();
         
         $li = $("<li><a href='javascript:onShowLink(\"" + memo._id + "\",\"" + memo.title + "\",\"" + memo.content + "\",\"" + memo.startdate + "\",\"" + memo.enddate + "\")' class='show'><h3></h3><p></p></a><a href='javascript:onDeleteBtn(\"" + memo._id + "\")' class='delete'>Delete</a></li>");
-        $li.find("h3").text(date);
-        $li.find("p").text(memo.title);
+        $li.find("h3").text(memo.title);
+        $li.find("p").text(memo.content);
 
         $("#TopListView").prepend($li);
          
@@ -556,18 +599,31 @@ function getMemoList() {
   });
 }
 
-function getUserList() {
+function getUserList(email, password) {
    console.log('blahblahbla');
-   var username = monaca.cloud.User.getProperty("age");
-   monaca.cloud.User.login("Login", "login")
+   //var username = monaca.cloud.User.getProperty("age");
+   var login= email;
+   var pass= password;
+   monaca.cloud.User.login(email, pass)
     .then(function()
     {
-       return monaca.cloud.User.getProperty("age");
+       return monaca.cloud.User.getProperties(["age","email"]);
     })
-    .then(function(age)
+    .then(function(properties)
     {
-       console.log(age);
-       console.log(username);
+       console.log("aage: "+ properties.age);
+              console.log("email: "+ properties.emails);
+
+       var age= properties.age;
+       var email= properties.email;
+          console.log("email and pass are: " + login + pass);
+          updateUser(email,pass,age);
+          $("#upd_age").val(age);
+          $("#upd_login").val(login);
+          $("#upd_password").val(pass);
+          $("#upd_email").val(email);
+          
+      //console.log("usernamee: "+ properties.password);
     })
 }
 
@@ -580,15 +636,22 @@ function updateUser(){
         monaca.cloud.User.login(updLogin, UpdPassword)
     .then(function()
     {
-       return monaca.cloud.User.saveProperties({"age": UpdAge,"email":UpdEmail });
-       alert('Your details are updated!');
-       $.mobile.changePage('#LandingPage');
+       return monaca.cloud.User.saveProperties({"age": UpdAge,"email":UpdEmail })
+       .then(function(){
+               alert('Your details have been updated!');
+
+                         $.mobile.changePage('#LandingPage');
+
+       });
+
+       //alert('Your details are updated!');
 
     })
     .done(function()
     {
-       cosole.log('Your nickname and email were changed');
-              alert('Your details are updated!');
+       // cosole.log('Your nickname and email were changed');
+       //        alert('Your details are updated!');
+              
 
-    })
+    });
 }

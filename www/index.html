@@ -65,7 +65,20 @@
             <a href="#yesNoDialog_logout" class="ui-btn-left" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-theme="b">Logout</a>
         </header>
         
+        
         <section data-role="content">
+        <div data-role="popup" id="yesNoDialog_logout" data-overlay-theme="a" data-theme="c" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+                <div data-role="header" data-theme="c" class="ui-corner-top" style="top: 0 !important;">
+                    <h1>Confirmation:</h1>
+                </div>
+                    
+                <div align="middle" data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                    <h3 class="ui-title">
+                    <p>Are you sure you want to logout?</p>
+                    <a href="#" id="YesBtn_logout" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Yes</a>
+                    <a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">No</a>
+                </div>
+            </div>
             <div id="logo">
                 <img src="img/logo.png">
             </div>
@@ -84,8 +97,7 @@
     <div data-role="page" id="Calendar">
         <header data-role="header" data-position="fixed" data-theme="c">
             <h1>Profile</h1>
-            <a href="#LandingPage" data-theme="b" class="ui-btn-right">Home</a>
-            <a href="#yesNoDialog_logout" class="ui-btn-left" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-theme="b">Logout</a>
+            <a href="#LandingPage" data-theme="b" class="ui-btn-left">Home</a>
         </header>
         
         <section data-role="content">
@@ -100,12 +112,13 @@
             </div>
         </section>
     </div>
+    
 <!-- Login Page -->
     <div data-role="page" id="LoginPage">
         <header data-role="header" data-position="fixed" data-theme="c">
             <h1>Home Page</h1>
             <a href="#RegisterPage" data-theme="b" class="ui-btn-right">Register</a>
-            <a href="#LandingPage" data-theme="b" class="ui-btn-left">Home</a>
+            <a href="#HomePage" data-theme="b" class="ui-btn-left">Home</a>
         </header>
         
         <!-- <section data-role="content"> -->
@@ -157,11 +170,11 @@
     <div data-role="page" id="UpdateProfile">
         <header data-role="header" data-position="fixed" data-theme="c">
             <h1>Profile</h1>
-            <a href="#LandingPage" data-theme="b" class="ui-btn-right">Home</a>
-            <a href="#yesNoDialog_logout" class="ui-btn-left" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-theme="b">Logout</a>
+            <a href="#LandingPage" data-theme="b" class="ui-btn-left">Home</a>
         </header>
         
         <section data-role="content">
+            
         <div style="position:absolute;top:10%; right:20%">
             <input type="text" placeholder="Login*" id="upd_login"><br>
             <input type="password" placeholder="Password*" id="upd_password"><br>
@@ -178,28 +191,16 @@
     <div data-role="page" id="ListPage">
         <header data-role="header" data-position="fixed" data-theme="c">
             <h1>Backend Memo</h1>
-            <a href="#AddProjectPage" data-theme="b" data-icon="plus" class="ui-btn-right">Add</a>
-            <a href="#yesNoDialog_logout" class="ui-btn-left" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-theme="b">Logout</a>
+            <a href="#LandingPage" data-theme="b" class="ui-btn-left">Home</a>
         </header>
         
         <section data-role="content">
+        <ul data-role="listview" id="menu" data-ajax="false" data-inset="true" >
+                <li><a href="#AddProjectPage">Add</a></li>
+        </ul>
             <ul id="TopListView" data-role="listview"
                 data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-split-icon="delete">
             </ul>
-
-            <!--Dialog box confirming logout -->
-            <div data-role="popup" id="yesNoDialog_logout" data-overlay-theme="a" data-theme="c" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
-                <div data-role="header" data-theme="c" class="ui-corner-top" style="top: 0 !important;">
-                    <h1>Confirmation:</h1>
-                </div>
-                    
-                <div align="middle" data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-                    <h3 class="ui-title">
-                    <p>Are you sure you want to logout?</p>
-                    <a href="#" id="YesBtn_logout" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Yes</a>
-                    <a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">No</a>
-                </div>
-            </div>
 
             <!--Dialog box confirming delete -->
             <div data-role="popup" id="yesNoDialog_delete" data-overlay-theme="a" data-theme="c" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
@@ -256,6 +257,8 @@
             <input type="date" id="startdate"/>
             <label for="EndDate">End Date:</label>
             <input type="date" id="enddate"/>
+            <label for="ProjectColour">Project Colour:</label>
+            <input type="color" id="projectcolour">
             <a href="#" data-rel="dialog" data-transition="pop" data-theme="b" data-role="button" data-icon="check" id="AddProjBtn">Add Assignment</a>
 
             <!--Dialog box of successful adding -->
@@ -276,10 +279,16 @@
         </header>
         
         <section data-role="content">
+        <label>Title</label>
             <input placeholder="Title" type="text" id="Tasktitle">
+            <label>Description</label>
             <textarea placeholder="Projects" id="Taskcontent" style="height: 8em"></textarea>
-            <input type="text" id="assignmentid">
-            <input type="date" id="taskbegin">
+            
+            <input type="hidden" id="assignmentid">
+            <label>Start Date</label>
+            <input type="date" id="taskbegin"placeholder="Task Start Date">
+            <label>End Date</label>
+            <input type="date" id="taskend"placeholder="Task End Date">
 
             <a href="#" data-rel="dialog" data-transition="pop" data-theme="b" data-role="button" data-icon="check" id="AddTasksBtn">Add Assignment</a>
             <div id="test"></div>
@@ -349,10 +358,15 @@
         </header>
         
         <section data-role="content">
+        
             <label for="title_edit">Title:</label>
             <input type="text" id="title_edit">
             <label for="Memo">Memo:</label>
             <textarea id="content_edit" style="height: 8em"></textarea>
+            <label>Start Date</label>
+            <input type="date" id="edit_taskbegin"placeholder="Task Start Date">
+            <label>End Date</label>
+            <input type="date" id="edit_taskend"placeholder="Task End Date">
             <a href="#" data-theme="b" data-role="button" data-icon="check" id="UpdateBtn">Update</a>
 
             <!--Dialog box of successful updating-->
